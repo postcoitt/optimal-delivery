@@ -1,0 +1,5 @@
+main.py route --matrix .\test1.json --depot 0 --deliveries trucks.json --number 2
+main.py route --matrix .\test1.json --depot 0 --deliveries trucks.json --number 1
+
+Відтестувати (нема файлу, неправильний номер)
+Замінити всі українські слова на англійські
