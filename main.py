@@ -106,7 +106,7 @@ def main():
     # Handle commands
     if args.command == "show-graph":
         route = json.loads(args.route) if args.route else None
-        show_graph_with_path(matrix, route, title="Граф", plot=not args.no_plot)
+        show_graph_with_path(matrix, route, title="Graph", plot=not args.no_plot)
         return
 
     elif args.command == "dijkstra":
@@ -142,13 +142,14 @@ def main():
         route = two_opt_improve(route, dist_matrix)
         cost = calculate_route_cost(route, dist_matrix)
 
-        print("Шлях:", route)
-        print("Вага:", cost)
+        print("Path:", route)
+        print("Weight:", cost)
 
         expanded_route = expand_route_via_dijkstra(route, matrix)
-        show_graph_with_path(matrix, expanded_route, title=f"Шлях (вага: {cost})", plot=not args.no_plot)
+        show_graph_with_path(matrix, expanded_route, title=f"Path (weight: {cost})", plot=not args.no_plot)
         return
 
 
 if __name__ == "__main__":
     main()
+
