@@ -9,9 +9,34 @@ def run_tests():
     assert d == [0, 3, 2], f"Expected [0,3,2], got {d}"
     assert p[1] == 2 and p[2] == 0
 
-    print("=== TEST 2: get_path ===")
+    print("=== TEST 1a: dijkstra 8-vertex graph ===")
+    matrix8 = [
+        [0,3,2,18,0,0,0,0],
+        [3,0,4,0,0,0,0,0],
+        [2,4,0,6,0,0,2,0],
+        [18,0,5,0,1,0,0,0],
+        [0,0,0,1,0,8,0,1],
+        [0,0,0,0,8,0,4,3],
+        [0,0,2,0,0,4,0,7.5],
+        [0,0,0,0,1,3,7.5,0]
+    ]
+    d8, p8 = dijkstra(matrix8, 0)
+    expected_distances = [0, 3, 2, 8, 9, 13, 4, 10]
+    expected_predecessors = [None, 0, 0, 2, 3, 6, 2, 4]
+    assert d8 == expected_distances, f"Expected {expected_distances}, got {d8}"
+    assert p8 == expected_predecessors, f"Expected {expected_predecessors}, got {p8}"
+
+    print("=== TEST 2: get_path simple graph ===")
     preds = [None, 2, 0]
     assert get_path(preds, 1) == [0, 2, 1]
+
+    print("=== TEST 2a: get_path 8-vertex graph ===")
+    # reconstruct path from 0 to 5 (distance 13)
+    path_0_5 = get_path(p8, 5)
+    assert path_0_5 == [0, 2, 6, 5], f"Expected [0,2,6,5], got {path_0_5}"
+    # path from 0 to 7
+    path_0_7 = get_path(p8, 7)
+    assert path_0_7 == [0, 2, 6, 5, 7] or path_0_7 == [0,2,6,5,7], f"Got {path_0_7}"
 
     print("=== TEST 3: build_distance_matrix ===")
     points = [0, 1, 2]
@@ -35,7 +60,6 @@ def run_tests():
 
     print("=== TEST 7: calculate_2opt_delta ===")
     delta = calculate_2opt_delta(r, 1, 3, dm)
-    # just ensure it returns a number
     assert isinstance(delta, float)
 
     print("=== TEST 8: two_opt_improve quick test ===")
@@ -53,7 +77,7 @@ def run_tests():
     packages = [
         {"id":101,"weight":6,"dest":1},
         {"id":102,"weight":4,"dest":2},
-        {"id":103,"weight":9,"dest":1}, # too heavy for truck 2
+        {"id":103,"weight":9,"dest":1},
     ]
     dist_m = {
         0:{0:0,1:5,2:8},
