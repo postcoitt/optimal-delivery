@@ -118,11 +118,29 @@ Although exact algorithms provide perfect accuracy, they are computationally exp
 **Complexity:** <br>
     **Time**: O(n² · 2ⁿ)
     **Space**: O(n · 2ⁿ)
+    
+### Greedy Algorithm
+Greedy algorithms for the Traveling Salesman Problem (TSP) build a tour step by step, choosing the best local option at each stage—typically the nearest unvisited vertex.
+The most common version is the Nearest Neighbor (NN) heuristic.
+Although greedy methods do not guarantee finding the optimal tour, they are extremely fast and easy to implement.
+The choice of the starting vertex can significantly influence the quality of the resulting tour, so the algorithm is sometimes run from multiple starting points.
 
+**Advantages**
+- Very fast execution: runs in linear or near-linear time.
+- Simple implementation: easy to code and understand.
+- Provides a quick baseline tour: useful as an initial solution for local search methods (2-Opt, 3-Opt).
+- Scales to large instances: can handle thousands or even tens of thousands of nodes.
+- Deterministic (if the starting vertex is fixed): always returns the same solution.
+
+**Complexity:**
+     **Time**: O(n²) 
+     **Space**: O(n) — only the list of visited vertices needs to be stored.
+     
 ## Statistics
 ![Statistics](photo/photo_2025-12-12_12-12-59.jpg)
 ![Statistics](photo_2025-12-12_12-13-08.jpg)
 ![Statistics](photo_2025-12-12_12-25-04.jpg)
+
 ## Run program
 
 ### cli arguments
@@ -231,9 +249,11 @@ More examples can be found in examples/
 
 **[Ryshko Danylo](https://github.com/postcoitt)**<br>
 ↳ Assignment: alternately assigning each load to the truck where it is logical to "add", according to a greedy criterion.<br>
+↳ 2-Opt Algorithm
 
 **[Kremer Sofiia](https://github.com/kremeriatko8)**<br>
 ↳ Route construction for each truck: given a set of points for the car, constructing the route (TSP subtask) greedily.<br>
+↳ Exact Algorithm
 
 **[Zavada Sofiia](https://github.com/Zavada-Sofiia)**<br>
 ↳ Working with graphs, .dot, visualization.<br>
