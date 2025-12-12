@@ -132,7 +132,7 @@ The choice of the starting vertex can significantly influence the quality of the
 - Scales to large instances: can handle thousands or even tens of thousands of nodes.
 - Deterministic (if the starting vertex is fixed): always returns the same solution.
 
-**Complexity:**
+**Complexity:**<br>
      **Time**: O(n²) 
      **Space**: O(n) — only the list of visited vertices needs to be stored.
      
