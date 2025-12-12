@@ -103,6 +103,26 @@ The process continues until no improving 2-Opt moves remain, at which point the 
         **Time**: O(n^2 ⋅ k), where k is the number of improving iterations<br>
         **Space**: O(n) for storing distances and predecessors.
 
+### Exact Algorithm
+Exact algorithms for the Traveling Salesman Problem (TSP) guarantee finding the optimal tour by exhaustively exploring the solution space or by using systematic methods such as dynamic programming or branch-and-bound.
+These methods ensure that the returned solution is provably minimal in total length.
+Although exact algorithms provide perfect accuracy, they are computationally expensive and typically applicable only to small or medium-sized instances.
+
+**Advantages**
+- Guarantees optimality: Always returns the best possible tour.
+- Mathematically rigorous: Provides provable optimality bounds and certificates.
+- No randomness: Results are fully deterministic.
+- Useful for benchmarking: Serves as a reference for evaluating heuristics and approximation algorithms.
+- Solves small/medium cases perfectly: Practical for instances up to 20–40 nodes (dynamic programming) or even 80–100+ nodes (branch-and-bound with good pruning).
+  
+**Complexity:** <br>
+    **Time**: O(n² · 2ⁿ)
+    **Space**: O(n · 2ⁿ)
+
+## Statistics
+![Statistics](photo/photo_2025-12-12_12-12-59.jpg)
+![Statistics](photo_2025-12-12_12-13-08.jpg)
+![Statistics](photo_2025-12-12_12-25-04.jpg)
 ## Run program
 
 ### cli arguments
