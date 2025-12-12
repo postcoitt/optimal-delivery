@@ -137,7 +137,7 @@ The choice of the starting vertex can significantly influence the quality of the
      **Space**: O(n) — only the list of visited vertices needs to be stored.
      
 ## Statistics
-![Statistics](photo/photo_2025-12-12_12-12-59.jpg)
+![Statistics](photo_2025-12-12_12-12-59.jpg)
 ![Statistics](photo_2025-12-12_12-13-08.jpg)
 ![Statistics](photo_2025-12-12_12-25-04.jpg)
 
