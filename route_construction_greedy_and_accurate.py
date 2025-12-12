@@ -4,7 +4,9 @@
 
 import math
 from typing import List, Dict, Tuple, Any
-
+import random
+import time
+import matplotlib.pyplot as plt
 # ==========================================
 # 1. GRAPH LOGIC (DIJKSTRA WITHOUT HEAPQ)
 # ==========================================
@@ -427,3 +429,85 @@ if __name__ == "__main__":
 
         print(f"\n[TRUCK {t_id}] Delivery Points: {d_points}")
         compare_algorithms(city_graph, depot_node, d_points)
+
+
+
+def generate_random_graph(n_nodes: int, min_weight=1, max_weight=20) -> dict:
+    """Генерує повний граф у вигляді матриці суміжності з вагами від min_weight до max_weight."""
+    graph = {i: {} for i in range(n_nodes)}
+    for i in range(n_nodes):
+        for j in range(i+1, n_nodes):
+            w = random.randint(min_weight, max_weight)
+            graph[i][j] = w
+            graph[j][i] = w
+    return graph
+
+def benchmark_random_graphs(max_nodes=20, n_trials=3):
+    """
+    Заміряє час виконання Greedy+2Opt і Exact та розраховує Gap (%) для різної кількості вершин.
+    Exact робиться лише для N <= 10.
+    """
+    n_list = list(range(3, max_nodes+1))
+    times_greedy = []
+    times_exact = []
+    gap_percents = []
+
+    for n in n_list:
+        tg_list = []
+        te_list = []
+        gaps = []
+
+        for _ in range(n_trials):
+            graph = generate_random_graph(n)
+            all_nodes = list(graph.keys())
+
+            # Greedy+2Opt
+            start = time.time()
+            greedy_res = construct_route_smart(graph, 0, all_nodes[1:], algorithm='greedy', use_2opt=True)
+            tg_list.append(time.time() - start)
+
+            # Exact для n <= 10
+            if n <= 10:
+                start = time.time()
+                exact_res = construct_route_smart(graph, 0, all_nodes[1:], algorithm='exact')
+                te_list.append(time.time() - start)
+                gap = (greedy_res['total_distance'] - exact_res['total_distance']) / exact_res['total_distance'] * 100
+                gaps.append(gap)
+            else:
+                te_list.append(None)
+                gaps.append(None)
+
+        times_greedy.append(sum(tg_list)/n_trials)
+        times_exact.append(sum([t for t in te_list if t is not None])/len([t for t in te_list if t is not None]) if n <= 10 else None)
+        gap_percents.append(sum([g for g in gaps if g is not None])/len([g for g in gaps if g is not None]) if n <= 10 else None)
+
+    return n_list, times_greedy, times_exact, gap_percents
+
+def plot_benchmark(n_list, times_greedy, times_exact, gap_percents):
+    # --- Час виконання ---
+    plt.figure(figsize=(10,5))
+    plt.plot(n_list, times_greedy, marker='o', label='Greedy+2Opt')
+    times_exact_plot = [t if t is not None else float('nan') for t in times_exact]
+    plt.plot(n_list, times_exact_plot, marker='s', label='Exact')
+    plt.xlabel('Кількість вершин')
+    plt.ylabel('Час виконання (сек)')
+    plt.title('Час виконання алгоритмів')
+    plt.yscale('log')  # лог-шкала для кращої видимості великих відмінностей
+    plt.grid(True, which='both', linestyle='--')
+    plt.legend()
+    plt.show()
+
+    # --- Gap (%) ---
+    plt.figure(figsize=(10,5))
+    gap_plot = [g if g is not None else float('nan') for g in gap_percents]
+    plt.plot(n_list, gap_plot, marker='o', color='red')
+    plt.xlabel('Кількість вершин')
+    plt.ylabel('Відсоток похибки (%)')
+    plt.title('Похибка Greedy+2Opt відносно Exact')
+    plt.grid(True)
+    plt.show()
+
+# --- Виклик ---
+n_list, times_greedy, times_exact, gap_percents = benchmark_random_graphs(max_nodes=20, n_trials=3)
+plot_benchmark(n_list, times_greedy, times_exact, gap_percents)
+
