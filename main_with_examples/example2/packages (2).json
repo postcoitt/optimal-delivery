@@ -1,0 +1,6 @@
+[
+  {"id": 201, "weight": 5, "dest": 2},
+  {"id": 202, "weight": 4, "dest": 3},
+  {"id": 203, "weight": 3, "dest": 4},
+  {"id": 204, "weight": 2, "dest": 1}
+]

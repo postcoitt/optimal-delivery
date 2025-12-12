@@ -1,0 +1,7 @@
+[
+  {"id": 301, "weight": 6, "dest": 1},
+  {"id": 302, "weight": 3, "dest": 3},
+  {"id": 303, "weight": 4, "dest": 4},
+  {"id": 304, "weight": 5, "dest": 5},
+  {"id": 305, "weight": 2, "dest": 2}
+]
