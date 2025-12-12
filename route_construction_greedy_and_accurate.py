@@ -507,7 +507,124 @@ def plot_benchmark(n_list, times_greedy, times_exact, gap_percents):
     plt.grid(True)
     plt.show()
 
-# --- Виклик ---
-n_list, times_greedy, times_exact, gap_percents = benchmark_random_graphs(max_nodes=20, n_trials=3)
-plot_benchmark(n_list, times_greedy, times_exact, gap_percents)
+
+def benchmark_three_algorithms(max_nodes=20, n_trials=3):
+    """
+    Порівнює:
+        1. Greedy
+        2. Greedy + 2-opt
+        3. Exact (тільки до N <= 10)
+
+    Повертає:
+        - n_list
+        - times_greedy
+        - times_greedy_2opt
+        - times_exact
+        - gap_greedy
+        - gap_greedy_2opt
+    """
+    n_list = list(range(3, max_nodes + 1))
+
+    times_g = []
+    times_g2 = []
+    times_e = []
+
+    gap_g = []
+    gap_g2 = []
+
+    for n in n_list:
+        t_g_list = []
+        t_g2_list = []
+        t_e_list = []
+
+        g_gaps = []
+        g2_gaps = []
+
+        for _ in range(n_trials):
+            graph = generate_random_graph(n)
+            nodes = list(graph.keys())
+
+            # Greedy ONLY
+            start = time.time()
+            res_g = construct_route_smart(graph, 0, nodes[1:], algorithm='greedy', use_2opt=False)
+            t_g_list.append(time.time() - start)
+
+            # Greedy + 2opt
+            start = time.time()
+            res_g2 = construct_route_smart(graph, 0, nodes[1:], algorithm='greedy', use_2opt=True)
+            t_g2_list.append(time.time() - start)
+
+            # Exact
+            if n <= 10:
+                start = time.time()
+                res_e = construct_route_smart(graph, 0, nodes[1:], algorithm='exact')
+                t_e_list.append(time.time() - start)
+
+                # Gaps
+                g_gaps.append((res_g['total_distance'] - res_e['total_distance']) /
+                              res_e['total_distance'] * 100)
+
+                g2_gaps.append((res_g2['total_distance'] - res_e['total_distance']) /
+                               res_e['total_distance'] * 100)
+            else:
+                t_e_list.append(None)
+                g_gaps.append(None)
+                g2_gaps.append(None)
+
+        times_g.append(sum(t_g_list) / n_trials)
+        times_g2.append(sum(t_g2_list) / n_trials)
+
+        if n <= 10:
+            e_clean = [t for t in t_e_list if t is not None]
+            times_e.append(sum(e_clean) / len(e_clean))
+
+            gap_g.append(sum([x for x in g_gaps if x is not None]) / len([x for x in g_gaps if x is not None]))
+            gap_g2.append(sum([x for x in g2_gaps if x is not None]) / len([x for x in g2_gaps if x is not None]))
+        else:
+            times_e.append(None)
+            gap_g.append(None)
+            gap_g2.append(None)
+
+    return n_list, times_g, times_g2, times_e, gap_g, gap_g2
+
+
+def plot_three_algorithm_benchmark(n_list, times_g, times_g2, times_e, gap_g, gap_g2):
+    # --- Час виконання ---
+    plt.figure(figsize=(10,6))
+    plt.plot(n_list, times_g, marker='o', label='Greedy')
+    plt.plot(n_list, times_g2, marker='s', label='Greedy + 2-opt')
+    te_plot = [t if t is not None else float('nan') for t in times_e]
+    plt.plot(n_list, te_plot, marker='^', label='Exact')
+    plt.yscale('log')
+    plt.xlabel('Кількість вершин')
+    plt.ylabel('Час (сек)')
+    plt.title('Порівняння часу виконання трьох алгоритмів')
+    plt.grid(True, which='both', linestyle='--')
+    plt.legend()
+    plt.show()
+
+    # --- Gap Greedy ---
+    plt.figure(figsize=(10,5))
+    gap_g_plot = [g if g is not None else float('nan') for g in gap_g]
+    plt.plot(n_list, gap_g_plot, marker='o', color='red')
+    plt.xlabel('Кількість вершин')
+    plt.ylabel('Gap Greedy (%)')
+    plt.title('Похибка Greedy відносно Exact')
+    plt.grid(True)
+    plt.show()
+
+    # --- Gap Greedy + 2-opt ---
+    plt.figure(figsize=(10,5))
+    gap_g2_plot = [g if g is not None else float('nan') for g in gap_g2]
+    plt.plot(n_list, gap_g2_plot, marker='o', color='green')
+    plt.xlabel('Кількість вершин')
+    plt.ylabel('Gap Greedy + 2-opt (%)')
+    plt.title('Похибка Greedy+2opt відносно Exact')
+    plt.grid(True)
+    plt.show()
+
+
+# --- Запуск ---
+n_list, t_g, t_g2, t_e, gap_g, gap_g2 = benchmark_three_algorithms(max_nodes=20, n_trials=3)
+plot_three_algorithm_benchmark(n_list, t_g, t_g2, t_e, gap_g, gap_g2)
 
