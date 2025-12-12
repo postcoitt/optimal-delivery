@@ -103,10 +103,70 @@ The process continues until no improving 2-Opt moves remain, at which point the 
         **Time**: O(n^2 ⋅ k), where k is the number of improving iterations<br>
         **Space**: O(n) for storing distances and predecessors.
 
-## Запуск
-```python
-main.py route --matrix test1.json --depot 0 --deliveries trucks.json --number 1
+## Run program
+
+### cli arguments
+| Argument     | Description                      |
+| ------------ | -------------------------------- |
+| `--graph`    | Path to graph JSON file          |
+| `--trucks`   | Path to trucks JSON file         |
+| `--packages` | Path to packages JSON file       |
+| `--depot`    | Depot node ID (default 0)        |
+| `--no-gui`   | Disable plotting of truck routes |
+
+### examples
+
+#### run with gui
+```bash
+python3 main.py \
+  --graph examples/example\ 1/graph.json \
+  --trucks examples/example\ 1/trucks.json \
+  --packages examples/example\ 1/packages.json \
+  --depot 0
 ```
+
+#### run without gui
+```bash
+python3 main.py \
+  --graph examples/example\ 1/graph.json \
+  --trucks examples/example\ 1/trucks.json \
+  --packages examples/example\ 1/packages.json \
+  --depot 0 \
+  --no-gui
+```
+
+#### examples of json files
+
+#### graph.json
+```json
+[
+  [0, 3, 0, 0, 7],
+  [3, 0, 2, 0, 0],
+  [0, 2, 0, 1, 8],
+  [0, 0, 1, 0, 4],
+  [7, 0, 8, 4, 0]
+]
+```
+
+#### packages.json
+```json
+[
+  {"id": 201, "weight": 5, "dest": 2},
+  {"id": 202, "weight": 4, "dest": 3},
+  {"id": 203, "weight": 3, "dest": 4},
+  {"id": 204, "weight": 2, "dest": 1}
+]
+```
+
+#### trucks.json
+```json
+[
+  {"id": 1, "capacity": 10},
+  {"id": 2, "capacity": 12}
+]
+```
+
+More examples can be found in examples/
 
 ## Function structure
 ### dijkstra
