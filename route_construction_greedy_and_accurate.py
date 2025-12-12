@@ -1,5 +1,24 @@
 """
-...
+Vehicle Routing Problem (VRP) Solver — Shortest Paths + Load Assignment + Route Optimization
+
+This module implements a simplified VRP solution pipeline consisting of three main stages:
+
+1. Shortest-Path Preprocessing:
+   Computes all-pairs shortest distances (and optionally paths) between the depot
+   and all delivery points using Dijkstra's algorithm.
+
+2. Load Assignment:
+   Distributes packages among available trucks based on weight capacity.
+   This acts as a constrained bin-packing step: each package is placed into a truck
+   whose remaining capacity can accommodate it.
+
+3. Route Construction and Optimization:
+   For each truck, a greedy TSP heuristic builds an initial route over its assigned
+   delivery points. The route is then improved using the 2-opt local-search algorithm,
+   which iteratively replaces two edges with a better pair until no further improvement
+   is possible.
+
+The module outputs final per-truck routes, total distances, and improvement statistics.
 """
 
 import math
@@ -7,9 +26,7 @@ from typing import List, Dict, Tuple, Any
 import random
 import time
 import matplotlib.pyplot as plt
-# ==========================================
-# 1. GRAPH LOGIC (DIJKSTRA WITHOUT HEAPQ)
-# ==========================================
+
 
 def dijkstra(
     adjacency_matrix: Dict[int, Dict[int, float]],
@@ -89,9 +106,7 @@ def build_distance_matrix(
     return distance_matrix
 
 
-# ==========================================
 # 2. ASSIGNMENT / CLUSTERING (GREEDY)
-# ==========================================
 
 def assign_packages_greedy(
     trucks: List[Dict[str, Any]],
@@ -161,9 +176,7 @@ def assign_packages_greedy(
     return assignments, unassigned
 
 
-# ==========================================
 # 3. ROUTING (TSP: GREEDY + 2-OPT)
-# ==========================================
 
 def calculate_route_cost(
     route: List[int],
@@ -262,9 +275,7 @@ def two_opt_improve(
     return best_route
 
 
-# ==========================================
 # 4. EXACT ALGORITHM (TSP: BRANCH & BOUND)
-# ==========================================
 
 def generate_all_routes(
     depot: int,
@@ -315,9 +326,7 @@ def exact_tsp(
     return best_sol[1], best_sol[0]
 
 
-# ==========================================
 # 5. SMART CONTROLLER & MAIN
-# ==========================================
 
 def construct_route_smart(
     adjacency_matrix: Dict[int, Dict[int, float]],
@@ -625,6 +634,7 @@ def plot_three_algorithm_benchmark(n_list, times_g, times_g2, times_e, gap_g, ga
 
 
 # --- Запуск ---
-n_list, t_g, t_g2, t_e, gap_g, gap_g2 = benchmark_three_algorithms(max_nodes=20, n_trials=3)
+n_list, t_g, t_g2, t_e, gap_g, gap_g2 = benchmark_three_algorithms(max_nodes=20, n_trials=255)
 plot_three_algorithm_benchmark(n_list, t_g, t_g2, t_e, gap_g, gap_g2)
+
 
